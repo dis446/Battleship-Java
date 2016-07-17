@@ -1,6 +1,7 @@
 package com.TG_CODE;
 
 //import java.lang.reflect.Array;
+//import java.lang.Thread; //Use this for Thread.sleep for stub testing infinite loops.
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,22 +14,15 @@ public class Main {
         System.out.println("Welcome to My BattleShip Game!!!");
         System.out.println("");
         while (true) {
-            int height = Integer.parseInt(input("How many rows would you like to play with?"));
-            int width = Integer.parseInt(input("How many columns would you like to play with?"));
+            int height = getInt("How many rows would you like to play with?", 1, 10);
+            //height = Number of rows.
+            int width = getInt("How many columns would you like to play with?", 1, 10);
+            //width = Number of columns.
             int maxShips = height * width;
-            int shipCount;
-            while (true) { //Ensure that the player doesn't choose to play with impossible number of ships.
-                shipCount = Integer.parseInt(input("How many ships would you like to play with?"));
-                if (shipCount <= maxShips) {
-                    if (shipCount > 0) {
-                        break;
-                    } else {
-                        System.out.println("You have to have more than 0 ships......");
-                    }
-                } else {
-                    System.out.println("You cannot have more than " + Integer.toString(maxShips) + " ships.");
-                }
-            }
+
+            //Ensure that the player doesn't choose to play with impossible number of ships.
+            int shipCount = getInt("How many ships would you like to play with?", 1, maxShips);
+
             Game(height, width, shipCount);
             String again = input("Do you want to play again? (Y/N)");
             if (again.charAt(0) != 'y') {
@@ -96,6 +90,9 @@ public class Main {
         while (noPlaced < shipCount) {
             int row;
             int col;
+            row = getInt("Choose a row to place your ship: ", 1, height);
+            col = getInt("Choose a column to place your ship: ", 1, width);
+            /*
             while (true) { //Get row
                 String stringRow = input("Choose a row to place your ship: ");
                 if (stringRow.length() == 1 && isInt(stringRow)) {
@@ -110,6 +107,9 @@ public class Main {
                     System.out.println("Error. Input must be of one ");
                 }
             }
+            */
+
+            /*
             while (true) { //Get column
                 String stringCol = input("Choose a column to place your ship: ");
                 if (stringCol.length() == 1 && isInt(stringCol)) {
@@ -124,7 +124,7 @@ public class Main {
                     System.out.println("Error. Input must be of one ");
                 }
             }
-
+            */
             boolean alreadyPlaced = false;
             for (int a = 0; a < playerPlacedRows.size(); a++) {
                 if (playerPlacedRows.get(a).equals(row) && playerPlacedCols.get(a).equals(col)) {
@@ -148,6 +148,7 @@ public class Main {
         ArrayList<Integer> playerFiredRows = new ArrayList<>();
         ArrayList<Integer> playerFiredCols = new ArrayList<>();
 
+
         while (playerShipsActive != 0 && botShipsActive != 0) { //Main Game loop.
             System.out.println("Here's the bot's board: ");
             printBoard(botBoard);
@@ -157,17 +158,42 @@ public class Main {
             printBoard(playerBoard);
             System.out.println("");
 
+            int[] playerFire; //playerfire[0] is the row. playerfire[1] is the column.
+
+            while(true){
+                playerFire = playerFire(height, width);
+                boolean alreadyFired = false;
+                //Thread.sleep(1000);
+                for (int a = 0; a < playerFiredRows.size(); a++){
+                    //Loop through playerFiredRows and playerFiredColumns to see if player has already fired there.
+                    //System.out.println("Player has previously fired at");
+                    //System.out.println(playerFiredRows.get(a));
+                    //System.out.println(playerFiredCols.get(a));
+                    //Thread.sleep(1000);
+                    if (((playerFiredRows.get(a)).equals(playerFire[0])) && ((playerFiredCols.get(a)).equals(playerFire[1]))){
+                        System.out.println("You've already fired upon that location");
+                        alreadyFired = true;
+                        break;
+                    }
+                }
+                if(!alreadyFired){
+                    playerFiredRows.add(playerFire[0]);
+                    playerFiredCols.add(playerFire[1]);
+                    break;
+                }
+            }
+            /*
             int[] playerFire;
             boolean alreadyFired; //Check if player has already fired upon that location.
             while (true) {
                 playerFire = playerFire(height, width);
                 alreadyFired = false;  //Exit if the player hasn't already fired there.
                 for (int a = 0; a < playerFiredRows.size(); a++) {
-                    /*
-                    System.out.println("Player has fired upon: ");
-                    System.out.print(playerFiredRows.get(a));
-                    System.out.print(playerPlacedCols.get(a));
-                    */
+
+                    //System.out.println("Player has fired upon: ");
+                    //System.out.print(playerFiredRows.get(a));
+                    //System.out.print(playerPlacedCols.get(a));
+
                     if (playerFiredRows.get(a).equals(playerFire[0]) && playerFiredCols.get(a).equals(playerFire[1])) {
                         System.out.println("You've already fired on that location!");
                         alreadyFired = true;
@@ -181,6 +207,7 @@ public class Main {
                     break; //break out of while loop as player hasn't fired upon that position.
                 }
             }
+            */
 
             boolean hit = false;
             for (int a = 0; a < botPlacedRows.size(); a++) {
@@ -202,7 +229,7 @@ public class Main {
             int[] botFire;
             while (true) {
                 botFire = botFire(height, width);
-                alreadyFired = false;
+                boolean alreadyFired = false;
                 for (int a = 0; a < botFiredRows.size(); a++) {
                     if (botFiredRows.get(a).equals(botFire[0]) && botFiredCols.get(a).equals(botFire[1])) {
                         System.out.println("You've already fired on that location!");
@@ -252,13 +279,14 @@ public class Main {
         }
         if (botShipsActive == 0) {
             System.out.println("YOU WIN!!!");
-        } else {
+        }
+        else {
             System.out.println("YOU LOSE!!!");
         }
     }
 
 
-    public static boolean isInt(String s) {
+    private static boolean isInt(String s) {
         boolean isInt = false;
         try {
             Integer.parseInt(s); // s is a valid integer
@@ -269,7 +297,7 @@ public class Main {
         return isInt;
     }
 
-    public static int randInt(int min, int max) {
+    private static int randInt(int min, int max) {
         Random rand = new Random();
         return rand.nextInt((max - min) + 1) + min;
     }
@@ -278,6 +306,27 @@ public class Main {
         System.out.println(message);
         Scanner scan = new Scanner(System.in);
         return scan.nextLine();
+    }
+
+    private static int getInt(String message, int min, int max){
+        String str = input(message);
+        int in;
+        if (isInt(str)){
+            in = Integer.parseInt(str);
+        }
+        else{
+            System.out.println("Only integer values are accepted.");
+            in = getInt(message, min, max);
+            return in;
+        }
+        if (in >= min && in <= max){
+            return in;
+        }
+        else{
+            System.out.println("Value must be between " + Integer.toString(min) + " and " + Integer.toString(max));
+            in = getInt(message, min, max);
+            return in;
+        }
     }
 
     private static char[][] initBoard(int height, int width) {
@@ -308,17 +357,19 @@ public class Main {
         return board;
     }
 
-    private static int[] botFire(int min, int max) {
-        int row = randInt(min, max);
-        int col = randInt(min, max);
+    private static int[] botFire(int rowMax, int colMax) {
+        int row = randInt(1, rowMax);
+        int col = randInt(1, colMax);
         return new int[]{row, col};
     }
 
     private static int[] playerFire(int rowMax, int colMax) {
-        int row;
+        int row = getInt("Choose a row to fire upon: ", 1, rowMax);
+        int col = getInt("Choose a column to fire upon: ", 1, colMax);
+        /*
         while (true) {
             String stringRow = input("Choose a row to fire upon: ");
-            if ((stringRow.length() == 1) && (isInt(stringRow))) {
+            if ((stringRow.length() > 0) && (isInt(stringRow))) {
                 row = Integer.parseInt(stringRow);
                 if (row >= 1 && row <= rowMax) {
                     break;
@@ -327,14 +378,14 @@ public class Main {
                     System.out.print(rowMax);
                 }
             } else {
-                System.out.println("Error. Input must be a one digit integer.");
+                System.out.println("Error. Input must be a integer.");
             }
         }
-        int col;
+
         while (true) {
-            String stringColoum = input("Choose a column to fire upon: ");
-            if ((stringColoum.length() == 1) && (isInt(stringColoum))) {
-                col = Integer.parseInt(stringColoum);
+            String stringColumn = input("Choose a column to fire upon: ");
+            if ((stringColumn.length() == 1) && (isInt(stringColumn))) {
+                col = Integer.parseInt(stringColumn);
                 if (row >= 1 && row <= colMax) {
                     break;
                 } else {
@@ -345,6 +396,7 @@ public class Main {
                 System.out.println("Error. Input must be a one digit integer.");
             }
         }
+        */
         //System.out.println("PlayerFire() returns: ");
         //System.out.println(row);
         //System.out.println(col);
