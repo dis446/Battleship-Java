@@ -1,6 +1,5 @@
 package com.TG_CODE;
 
-//import java.lang.reflect.Array;
 //import java.lang.Thread; //Use this for Thread.sleep for stub testing infinite loops.
 
 import java.util.ArrayList;
@@ -46,16 +45,6 @@ public class Main {
         System.out.println("Here's the bot's board: ");
         printBoard(botBoard);
 
-        /* //Old method of storing bot's ships' locations using a Map Object. Ignore.
-        Map botPlacedShips = new HashMap();
-        botPlacedShips.put("row1", randInt(0,4));
-        botPlacedShips.put("row2", randInt(0,4));
-        botPlacedShips.put("row3", randInt(0,4));
-        botPlacedShips.put("col1", randInt(0,4));
-        botPlacedShips.put("col2", randInt(0,4));
-        botPlacedShips.put("col3", randInt(0,4));
-        */
-
         int noPlaced = 0; //Number of ships placed. Used by both bot and player.
 
         //Set bot's pieces.
@@ -92,39 +81,7 @@ public class Main {
             int col;
             row = getInt("Choose a row to place your ship: ", 1, height);
             col = getInt("Choose a column to place your ship: ", 1, width);
-            /*
-            while (true) { //Get row
-                String stringRow = input("Choose a row to place your ship: ");
-                if (stringRow.length() == 1 && isInt(stringRow)) {
-                    row = Integer.parseInt(stringRow);
-                    if (row <= height && row > 0) {
-                        break;
-                    } else {
-                        System.out.println("Error. Input be between range of 1 and ");
-                        System.out.print(height);
-                    }
-                } else {
-                    System.out.println("Error. Input must be of one ");
-                }
-            }
-            */
 
-            /*
-            while (true) { //Get column
-                String stringCol = input("Choose a column to place your ship: ");
-                if (stringCol.length() == 1 && isInt(stringCol)) {
-                    col = Integer.parseInt(stringCol);
-                    if (col <= width && col > 0) {
-                        break;
-                    } else {
-                        System.out.println("Error. Input be between range of 1 and ");
-                        System.out.print(width);
-                    }
-                } else {
-                    System.out.println("Error. Input must be of one ");
-                }
-            }
-            */
             boolean alreadyPlaced = false;
             for (int a = 0; a < playerPlacedRows.size(); a++) {
                 if (playerPlacedRows.get(a).equals(row) && playerPlacedCols.get(a).equals(col)) {
@@ -147,7 +104,6 @@ public class Main {
         ArrayList<Integer> botFiredCols = new ArrayList<>();
         ArrayList<Integer> playerFiredRows = new ArrayList<>();
         ArrayList<Integer> playerFiredCols = new ArrayList<>();
-
 
         while (playerShipsActive != 0 && botShipsActive != 0) { //Main Game loop.
             System.out.println("Here's the bot's board: ");
@@ -182,32 +138,6 @@ public class Main {
                     break;
                 }
             }
-            /*
-            int[] playerFire;
-            boolean alreadyFired; //Check if player has already fired upon that location.
-            while (true) {
-                playerFire = playerFire(height, width);
-                alreadyFired = false;  //Exit if the player hasn't already fired there.
-                for (int a = 0; a < playerFiredRows.size(); a++) {
-
-                    //System.out.println("Player has fired upon: ");
-                    //System.out.print(playerFiredRows.get(a));
-                    //System.out.print(playerPlacedCols.get(a));
-
-                    if (playerFiredRows.get(a).equals(playerFire[0]) && playerFiredCols.get(a).equals(playerFire[1])) {
-                        System.out.println("You've already fired on that location!");
-                        alreadyFired = true;
-                        break; //break out of for loop as no need to check any further pieces.
-                        //Let while loop continue; therefore ask for playerFire again.
-                    }
-                }
-                if (!alreadyFired) {
-                    playerFiredRows.add(playerFire[0]);
-                    playerFiredCols.add(playerFire[1]);
-                    break; //break out of while loop as player hasn't fired upon that position.
-                }
-            }
-            */
 
             boolean hit = false;
             for (int a = 0; a < botPlacedRows.size(); a++) {
@@ -244,7 +174,6 @@ public class Main {
                 }
             }
 
-
             hit = false;
             for (int a = 0; a < playerPlacedRows.size(); a++) {
                 if (playerPlacedRows.get(a).equals(botFire[0]) && playerPlacedCols.get(a).equals(botFire[1])) {
@@ -261,21 +190,6 @@ public class Main {
                 System.out.println("The bot missed!");
                 playerBoard = setPiece(playerBoard, botFire[0], botFire[1], 'M');
             }
-
-            /* //Old method of checking if bot had hit or not, by checking if the character at botFire[0],botfire[1] was 'S'.
-            //Didn't work.
-            if (playerBoard[botFire[0]][botFire[1]] == ('S')) {
-                //Bot has hit!!!
-                System.out.println("The bot has hit one of your ships!!!");
-                playerBoard = setPiece(playerBoard,botFire[0], botFire[1], 'X');
-                playerShipsActive--;
-                System.out.println("You now have " + Integer.toString(playerShipsActive) + " ships active.");
-            }
-            else{
-                System.out.println("The bot missed!");
-                playerBoard = setPiece(playerBoard,botFire[0], botFire[1], 'M');
-            }
-            */
         }
         if (botShipsActive == 0) {
             System.out.println("YOU WIN!!!");
@@ -284,7 +198,6 @@ public class Main {
             System.out.println("YOU LOSE!!!");
         }
     }
-
 
     private static boolean isInt(String s) {
         boolean isInt = false;
@@ -366,40 +279,6 @@ public class Main {
     private static int[] playerFire(int rowMax, int colMax) {
         int row = getInt("Choose a row to fire upon: ", 1, rowMax);
         int col = getInt("Choose a column to fire upon: ", 1, colMax);
-        /*
-        while (true) {
-            String stringRow = input("Choose a row to fire upon: ");
-            if ((stringRow.length() > 0) && (isInt(stringRow))) {
-                row = Integer.parseInt(stringRow);
-                if (row >= 1 && row <= rowMax) {
-                    break;
-                } else {
-                    System.out.println("Error. Number must be between the range of 1 and ");
-                    System.out.print(rowMax);
-                }
-            } else {
-                System.out.println("Error. Input must be a integer.");
-            }
-        }
-
-        while (true) {
-            String stringColumn = input("Choose a column to fire upon: ");
-            if ((stringColumn.length() == 1) && (isInt(stringColumn))) {
-                col = Integer.parseInt(stringColumn);
-                if (row >= 1 && row <= colMax) {
-                    break;
-                } else {
-                    System.out.println("Error. Number must be between the range of 1");
-                    System.out.print(colMax);
-                }
-            } else {
-                System.out.println("Error. Input must be a one digit integer.");
-            }
-        }
-        */
-        //System.out.println("PlayerFire() returns: ");
-        //System.out.println(row);
-        //System.out.println(col);
         return new int[]{row, col};
     }
 }
